@@ -1,46 +1,22 @@
 var Validator = require("jsonschema").Validator;
 
 module.exports = {
-	timeEntry: function (data) {
+	image: function (data) {
 		var v = new Validator();
+
 		var schema = {
-			"id": "/Timeentry",
+			"id": "/Image",
 			"type": "object",
 			"properties": {
-				"user": { "type": "number"},
-				"mode": { "type": "string"},
-				"start": { "date": "date" },
-				"end": { "date": "date" },
+				"uuid": { "type": "string" },
+				"title": { "type": "string" },
+				"status": { "type": "number" },
+				"source": { "type": "buffer" }
 			},
-			"required": ["user", "mode", "start", "end"]
-		};
-		var result = v.validate(data, schema);
-
-		if (result.valid) {
-			return true;
-		} else {
-			return result;
+			"required": [
+				"uuid"
+			]
 		}
 	},
-
-	measure: function (data) {
-		var v = new Validator();
-		var schema = {
-			"id": "/Measure",
-			"type": "object",
-			"properties": {
-				"user": { "type": "number" },
-				"mode": { "type": "string" },
-			},
-			"required": ["user", "mode"]
-		};
-		var result = v.validate(data, schema);
-
-		if (result.valid) {
-			return true;
-		} else {
-			return result;
-		}
-	}
 
 }
