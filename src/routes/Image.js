@@ -15,9 +15,21 @@ module.exports = {
 			var validation = Validation.getByTitle(data);
 
 			if (validation == true) {
-				Image.find({ title: data.title }, {} , (err, images) => {
+				Image.find({ title: data.title, status: 1 }, {} , (err, images) => {
 					res.status(200);
-					res.json(images);
+
+					var out = [];
+
+					for (let image of images) {
+						var element = {
+							uuid: image.uuid,
+							title: image.title,
+							source: image.source
+						}
+						out.push(element);
+					}
+
+					res.json(out);
 				});
 			} else {
 				res.status(409);
@@ -29,7 +41,19 @@ module.exports = {
 		app.get("/image/list", (req, res) => {
 			Image.find({ status: 1 }, {}, (err, images) => {
 				res.status(200);
-				res.json(images);
+
+				var out = [];
+
+				for (let image of images) {
+					var element = {
+						uuid: image.uuid,
+						title: image.title,
+						source: image.source
+					}
+					out.push(element);
+				}
+
+				res.json(out);
 			})
 		});
 	},
@@ -41,21 +65,25 @@ module.exports = {
 			var validation = Validation.get(data);
 
 			if (validation == true) {
-				Image.findOne({ uuid: data.uuid }, (err, img) => {
-					//res.send(err);
-					if (img == undefined) {
-						//res.status(500);
-						res.send("Nothing here");
-					} else {
-						//res.status(200);
-						res.json(img.source);
+				Image.find({ uuid: data.uuid, status: 1 }, {}, (err, images) => {
+					res.status(200);
+
+					var out = [];
+
+					for (let image of images) {
+						var element = {
+							uuid: image.uuid,
+							title: image.title,	
+							source: image.source
+						}
+						out.push(element);
 					}
+					res.json(out);
 				});
 			} else {
 				res.status(409);
 				res.json(validation.errors);
 			}
-			res.json(validation.errors);
 		});
 	},
 	post: function (app) {
