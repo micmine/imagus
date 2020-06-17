@@ -23,7 +23,27 @@ module.exports = {
 			return result;
 		}
 	},
+	uploadFile: function (data) {
+		var v = new Validator();
 
+		var schema = {
+			"id": "/Image",
+			"type": "object",
+			"properties": {
+				"title": { "type": "string" },
+			},
+			"required": [
+				"title"
+			]
+		}
+		var result = v.validate(data, schema);
+
+		if (result.valid) {
+			return true;
+		} else {
+			return result;
+		}
+	},
 	get: function (data) {
 		var v = new Validator();
 
