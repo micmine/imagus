@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var textSearch = require('mongoose-text-search');
 require("../controller/Database");
 
 const imageSchema = new mongoose.Schema({
@@ -10,12 +11,15 @@ const imageSchema = new mongoose.Schema({
 		trim: true
 	},
 	source: {
-		type: Buffer,
+		type: String,
 	},
 	status: {
 		type: Number,
 		default: 1
 	}
 });
+
+imageSchema.plugin(textSearch);
+imageSchema.index({ title: "text" });
 
 module.exports = mongoose.model('Image', imageSchema);

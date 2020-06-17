@@ -1,16 +1,16 @@
 var compression = require('compression');
 var express = require("express");
 
-var Insert = require("./routes/Insert");
-var Measure = require("./routes/Measure");
+var Image = require("./routes/Image");
 
 var app = express();
 app.use(express.json());
 app.use(compression());
 
-Insert.post(app);
+Image.list(app);
+Image.search(app);
+Image.get(app);
 
-Measure.post(app);
-Measure.put(app);
+Image.post(app);
 
 app.listen(8000, () => console.log(`Example app listening on port 8000`));
