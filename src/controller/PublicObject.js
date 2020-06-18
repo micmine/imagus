@@ -2,10 +2,15 @@ require('dotenv').config();
 
 class PublicObject {
 
+	constructor() {
+		this.address = process.env.address;
+		this.uploadPath = process.env.uploadPath;
+	}
+
 	image(image) {
 		var url = image.source;
 		if (!image.source.startsWith("http")) {
-			url = process.env.address + process.env.uploadPath + image.uuid + ".png";
+			url = this.address + this.uploadPath + image.uuid + ".png";
 		}
 
 		var output = {

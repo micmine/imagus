@@ -8,7 +8,7 @@ require("../model/Image").Image;
 var Image = mongoose.model("Image");
 
 var LocalImage = require("../controller/LocalImage");
-var PublicObject = require("../controller/PublicObject").PublicObject;
+var PublicObject = require("../controller/PublicObject");
 
 var Validation = require("../controller/Validation");
 
@@ -26,9 +26,11 @@ module.exports = {
 
 					var out = [];
 
-					for (let image of images) {
-						out.push(PublicObject.image(image));
-					}
+					var publicObject = new PublicObject();
+
+					images.forEach((image) => {
+						out.push(publicObject.image(image));
+					});
 
 					res.json(out);
 				});
@@ -45,9 +47,11 @@ module.exports = {
 
 				var out = [];
 
-				for (let image of images) {
-					out.push(PublicObject.image(image));
-				}
+				var publicObject = new PublicObject();
+
+				images.forEach((image) => {
+					out.push(publicObject.image(image));
+				});
 
 				res.json(out);
 			})
@@ -66,9 +70,12 @@ module.exports = {
 
 					var out = [];
 
-					for (let image of images) {
-						out.push(PublicObject.image(image));
-					}
+					var publicObject = new PublicObject();
+
+					images.forEach((image) => {
+						out.push(publicObject.image(image));
+					});
+
 					res.json(out);
 				});
 			} else {
