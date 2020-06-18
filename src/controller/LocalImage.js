@@ -14,7 +14,6 @@ class LocalImage {
 				.png()
 				.toFile(this.uploadPath + uuid + ".png", (err, info) => {
 					if (err) {
-						console.log(err);
 						reject(err);
 					} else {
 						resolve(info);

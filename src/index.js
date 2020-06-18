@@ -2,18 +2,23 @@ var compression = require('compression');
 var express = require("express");
 var fileupload = require("express-fileupload");
 
-var Image = require("./routes/Image");
+var ImageRouter = require("./routes/ImageRouter");
 
+// load exress
 var app = express();
 app.use(express.json());
 app.use(compression());
 app.use(fileupload());
 
-Image.list(app);
-Image.search(app);
-Image.get(app);
+// add routes
+ImageRouter.static(app);
 
-Image.upload(app);
-Image.post(app);
+ImageRouter.list(app);
+ImageRouter.search(app);
+ImageRouter.get(app);
 
+ImageRouter.upload(app);
+ImageRouter.post(app);
+
+// start server
 app.listen(8000, () => console.log(`Example app listening on port 8000`));

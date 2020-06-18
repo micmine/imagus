@@ -1,5 +1,6 @@
+var express = require("express");
 var mongoose = require('mongoose');
-var uuid = require("uuid");
+const { v4: uuid } = require('uuid');
 var multer  = require('multer');
 require('dotenv').config();
 
@@ -76,19 +77,15 @@ module.exports = {
 			}
 		});
 	},
+	static: function (app) {
+		app.use("/static", express.static("static"));
+	},
+
 	upload: function (app) {
 		var upload = multer({ dest: process.env.uploadPath });
 
 		app.post("/image/upload", upload.single("image"), (req, res) => {
 
-			if (!req.files) {
-				res.status(409);
-				res.send("Pleace send an image");
-			} else {
-				if (!req.body) {
-					res.status(409);
-					res.json(req.body);
-				} else {
 					var current = uuid();
 
 					const output = {
@@ -98,7 +95,18 @@ module.exports = {
 						status: 1
 					}
 
-					var file = new LocalImage().save(output.uuid, req.file).then(() => {
+					if (!req.files) {
+						const error = new Error('Please upload a file')
+						error.httpStatusCode = 400
+						res.send(error);
+					  }
+
+					//res.send(req.files.image);
+
+					// save file
+					
+					var file = new LocalImage().save(output.uuid, req.files).then(() => {
+
 						const image = new Image(output);
 
 						image.save().then(() => {
@@ -113,10 +121,9 @@ module.exports = {
 					}).catch((err) => {
 						console.log(err);
 						res.status(500);
-						res.json("sd");
+						res.json("Could not save Image");
 					});
-				}
-			}
+
 		});
 	},
 	post: function (app) {
@@ -135,6 +142,7 @@ module.exports = {
 
 				const image = new Image(output);
 
+				// save image
 				image.save().then(() => {
 					res.status(201);
 					res.json(output.uuid);
