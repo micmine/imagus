@@ -9,7 +9,8 @@ class LocalImage {
 
 	save(uuid, image) {
 		return new Promise((resolve, reject) => {
-			sharp(image)
+			console.log(image.path);
+			sharp(image.path)
 				.resize(1280, 720)
 				.png()
 				.toFile(this.uploadPath + uuid + ".png", (err, info) => {

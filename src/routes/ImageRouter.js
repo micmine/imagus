@@ -95,24 +95,20 @@ module.exports = {
 						status: 1
 					}
 
-					if (!req.files) {
+					if (!req.file) {
 						const error = new Error('Please upload a file')
 						error.httpStatusCode = 400
 						res.send(error);
-					  }
+					}
 
-					//res.send(req.files.image);
-
-					// save file
-					
-					var file = new LocalImage().save(output.uuid, req.files).then(() => {
+					var file = new LocalImage().save(output.uuid, req.file).then(() => {
 
 						const image = new Image(output);
 
 						image.save().then(() => {
 							res.status(201);
 							res.json(output.uuid);
-							console.log("Create Image:  " + data);
+							console.log("Create Image");
 						}).catch((err) => {
 							console.log(err);
 							res.status(500);

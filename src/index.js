@@ -1,14 +1,15 @@
 var compression = require('compression');
 var express = require("express");
-var fileupload = require("express-fileupload");
 
+var multer  = require('multer');
 var ImageRouter = require("./routes/ImageRouter");
+
+var upload = multer({ dest: process.env.uploadPath });
 
 // load exress
 var app = express();
 app.use(express.json());
 app.use(compression());
-app.use(fileupload());
 
 // add routes
 ImageRouter.static(app);
