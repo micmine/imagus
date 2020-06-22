@@ -9,7 +9,6 @@ var Image = mongoose.model("Image");
 
 var LocalImage = require("../controller/LocalImage");
 var PublicObject = require("../controller/PublicObject");
-var ApiResource = require("../controller/ApiResource");
 
 var Validation = require("../controller/Validation");
 
