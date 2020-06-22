@@ -1,7 +1,7 @@
-var compression = require('compression');
+var compression = require("compression");
 var express = require("express");
 
-var multer  = require('multer');
+var multer = require("multer");
 var ImageRouter = require("./routes/ImageRouter");
 
 var upload = multer({ dest: process.env.uploadPath });
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(compression());
 
 // add routes
-ImageRouter.static(app);
+ImageRouter.public(app);
 
 ImageRouter.list(app);
 ImageRouter.search(app);
