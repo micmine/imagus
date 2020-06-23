@@ -15,13 +15,6 @@ var Validation = require("../controller/Validation");
 module.exports = {
 	search: function (app) {
 		app.get("/image/search", (req, res) => {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header(
-				"Access-Control-Allow-Methods",
-				"PUT, GET, POST, DELETE, OPTIONS"
-			);
-			res.header("Access-Control-Allow-Headers", "Content-Type");
-
 			const data = req.body;
 			console.log(data);
 
@@ -49,13 +42,6 @@ module.exports = {
 	},
 	list: function (app) {
 		app.get("/image/list", (req, res) => {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header(
-				"Access-Control-Allow-Methods",
-				"PUT, GET, POST, DELETE, OPTIONS"
-			);
-			res.header("Access-Control-Allow-Headers", "Content-Type");
-
 			Image.find({ status: 1 }, {}, (err, images) => {
 				res.status(200);
 
@@ -73,13 +59,6 @@ module.exports = {
 	},
 	get: function (app) {
 		app.get("/image", (req, res) => {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header(
-				"Access-Control-Allow-Methods",
-				"PUT, GET, POST, DELETE, OPTIONS"
-			);
-			res.header("Access-Control-Allow-Headers", "Content-Type");
-
 			const data = req.body;
 			console.log(data);
 
@@ -113,13 +92,6 @@ module.exports = {
 		var upload = multer({ dest: process.env.uploadPath });
 
 		app.post("/image/upload", upload.single("image"), (req, res) => {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header(
-				"Access-Control-Allow-Methods",
-				"PUT, GET, POST, DELETE, OPTIONS"
-			);
-			res.header("Access-Control-Allow-Headers", "Content-Type");
-
 			var current = uuid();
 
 			const output = {
@@ -140,8 +112,7 @@ module.exports = {
 				.then(() => {
 					const image = new Image(output);
 
-					image
-						.save()
+					image.save()
 						.then(() => {
 							res.status(201);
 							//res.json(output.uuid);
@@ -157,19 +128,12 @@ module.exports = {
 					res.status(500);
 					res.json("Could not save Image");
 				}).finally(() => {
-					res.redirect(req.param("redirect"));
+					res.redirect(req.body.redirect);
 				});
 		});
 	},
 	post: function (app) {
 		app.post("/image", (req, res) => {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header(
-				"Access-Control-Allow-Methods",
-				"PUT, GET, POST, DELETE, OPTIONS"
-			);
-			res.header("Access-Control-Allow-Headers", "Content-Type");
-
 			const data = req.body;
 			console.log(data);
 			var validation = Validation.upload(data);
@@ -185,8 +149,7 @@ module.exports = {
 				const image = new Image(output);
 
 				// save image
-				image
-					.save()
+				image.save()
 					.then(() => {
 						res.status(201);
 						res.json(output.uuid);
@@ -205,19 +168,19 @@ module.exports = {
 	},
 	put: function (app) {
 		app.put("/image", (req, res) => {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header(
-				"Access-Control-Allow-Methods",
-				"PUT, GET, POST, DELETE, OPTIONS"
-			);
-			res.header("Access-Control-Allow-Headers", "Content-Type");
-
 			const data = req.body;
 			console.log(data);
 			var validation = Validation.get(data);
 
 			if (validation == true) {
-				Image.updateOne({ uuid: data.uuid }, { status: data.status });
+				Image.updateOne({ uuid: data.uuid }, { status: data.status }).then(() => {
+					res.status(201);
+					res.send("OK");
+				}).catch((error) => {
+					res.status(500);
+					res.json(error);
+					console.log(error)
+				});
 			} else {
 				res.status(409);
 				res.json(validation.errors);
