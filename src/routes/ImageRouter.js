@@ -144,7 +144,7 @@ module.exports = {
 						.save()
 						.then(() => {
 							res.status(201);
-							res.json(output.uuid);
+							//res.json(output.uuid);
 							console.log("Create Image");
 						})
 						.catch((err) => {
