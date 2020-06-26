@@ -21,7 +21,7 @@ ImageRouter.search(app);
 ImageRouter.get(app);
 
 ImageRouter.upload(app);
-ImageRouter.post(app);
+ImageRouter.addImage(app);
 ImageRouter.put(app);
 
 // start server

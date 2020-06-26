@@ -58,7 +58,7 @@ module.exports = {
 		});
 	},
 	get: function (app) {
-		app.get("/image", (req, res) => {
+		app.post("/image", (req, res) => {
 			const data = req.body;
 			console.log(data);
 
@@ -76,7 +76,7 @@ module.exports = {
 						out.push(publicObject.image(image));
 					});
 
-					res.json(out);
+					res.json(out[0]);
 				});
 			} else {
 				res.status(409);
@@ -132,8 +132,8 @@ module.exports = {
 				});
 		});
 	},
-	post: function (app) {
-		app.post("/image", (req, res) => {
+	addImage: function (app) {
+		app.post("/image/url", (req, res) => {
 			const data = req.body;
 			console.log(data);
 			var validation = Validation.upload(data);
@@ -173,7 +173,17 @@ module.exports = {
 			var validation = Validation.get(data);
 
 			if (validation == true) {
-				Image.updateOne({ uuid: data.uuid }, { status: data.status }).then(() => {
+				let image = {};
+
+				if (typeof data.title !== 'undefined' && data.title !== null) {
+					image.title = data.title;
+				}
+
+				if (typeof data.status !== 'undefined' && data.status !== null) {
+					image.status = data.status;
+				}
+
+				Image.updateOne({ uuid: data.uuid }, image).then(() => {
 					res.status(201);
 					res.send("OK");
 				}).catch((error) => {
