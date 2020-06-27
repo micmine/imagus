@@ -1,9 +1,10 @@
 var compression = require("compression");
 var express = require("express");
 var cors = require('cors');
+var session = require('express-session');
 
-const Keycloak = require('keycloak-connect');
-const session = require('express-session');
+
+var Auth = require("./Auth");
 
 var multer = require("multer");
 var ImageRouter = require("./routes/ImageRouter");
@@ -13,18 +14,17 @@ var upload = multer({ dest: process.env.uploadPath });
 // load exress
 var app = express();
 
-var memoryStore = new session.MemoryStore();
-var keycloak = new Keycloak({ store: memoryStore });
+let auth = new Auth();
+auth.init();
 
-//session
 app.use(session({
-  secret:'thisShouldBeLongAndSecret',
-  resave: false,
-  saveUninitialized: true,
-  store: memoryStore
+	secret:'thisShouldBeLongAndSecret',
+	resave: false,
+	saveUninitialized: true,
+	store: auth.getMemoryStore()
 }));
 
-app.use(keycloak.middleware());
+app.use(auth.getKeycloak().middleware());
 
 
 app.use(express.json());

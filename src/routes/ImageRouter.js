@@ -6,6 +6,8 @@ require("dotenv").config();
 
 require("../model/Image").Image;
 var Image = mongoose.model("Image");
+var _Auth = require("../Auth");
+var auth = new _Auth();
 
 var LocalImage = require("../controller/LocalImage");
 var PublicObject = require("../controller/PublicObject");
@@ -14,7 +16,7 @@ var Validation = require("../controller/Validation");
 
 module.exports = {
 	search: function (app) {
-		app.get("/image/search", (req, res) => {
+		app.get("/image/search", auth.getKeycloak().protect(), (req, res) => {
 			const data = req.body;
 			console.log(data);
 
@@ -41,7 +43,7 @@ module.exports = {
 		});
 	},
 	list: function (app) {
-		app.get("/image/list", (req, res) => {
+		app.get("/image/list", auth.getKeycloak().protect(), (req, res) => {
 			Image.find({ status: 1 }, {}, (err, images) => {
 				res.status(200);
 
@@ -58,7 +60,7 @@ module.exports = {
 		});
 	},
 	get: function (app) {
-		app.post("/image", (req, res) => {
+		app.post("/image", auth.getKeycloak().protect(), (req, res) => {
 			const data = req.body;
 			console.log(data);
 
@@ -85,13 +87,13 @@ module.exports = {
 		});
 	},
 	public: function (app) {
-		app.use("/public", express.static("public"));
+		app.use("/public", auth.getKeycloak().protect(), express.static("public"));
 	},
 
 	upload: function (app) {
 		var upload = multer({ dest: process.env.uploadPath });
 
-		app.post("/image/upload", upload.single("image"), (req, res) => {
+		app.post("/image/upload", auth.getKeycloak().protect(), upload.single("image"), (req, res) => {
 			var current = uuid();
 
 			const output = {
@@ -133,7 +135,7 @@ module.exports = {
 		});
 	},
 	addImage: function (app) {
-		app.post("/image/url", (req, res) => {
+		app.post("/image/url", auth.getKeycloak().protect(), (req, res) => {
 			const data = req.body;
 			console.log(data);
 			var validation = Validation.upload(data);
@@ -167,7 +169,7 @@ module.exports = {
 		});
 	},
 	put: function (app) {
-		app.put("/image", (req, res) => {
+		app.put("/image", auth.getKeycloak().protect(), (req, res) => {
 			const data = req.body;
 			console.log(data);
 			var validation = Validation.get(data);
