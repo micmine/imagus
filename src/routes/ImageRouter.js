@@ -16,14 +16,19 @@ var Validation = require("../controller/Validation");
 
 module.exports = {
 	search: function (app) {
-		app.get("/image/search", auth.getKeycloak().protect(), (req, res) => {
+		app.post("/image/search", auth.getKeycloak().protect(), (req, res) => {
 			const data = req.body;
 			console.log(data);
 
-			var validation = Validation.getByTitle(data);
+			var validation = Validation.search(data);
+
+			let search = data;
+			if (search.status == undefined) {
+				search.status = 1;
+			}
 
 			if (validation == true) {
-				Image.find({ title: data.title, status: 1 }, {}, (err, images) => {
+				Image.find(search, {}, (err, images) => {
 					res.status(200);
 
 					var out = [];

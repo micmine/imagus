@@ -69,7 +69,7 @@ module.exports = {
 		}
 	},
 
-	getByTitle: function (data) {
+	search: function (data) {
 		var v = new Validator();
 
 		var schema = {
@@ -81,9 +81,6 @@ module.exports = {
 				"status": { "type": "number" },
 				"source": { "type": "string" }
 			},
-			"required": [
-				"title"
-			]
 		}
 		var result = v.validate(data, schema);
 
