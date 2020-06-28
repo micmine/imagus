@@ -12,8 +12,9 @@ class LocalImage {
 			console.log(image.path);
 			sharp(image.path)
 				.resize(1280, 720, {
-					fit: 'outside',
-				})
+					fit: sharp.fit.inside,
+					withoutEnlargement: true
+				  })
 				.png()
 				.toFile(this.uploadPath + uuid + ".png", (err, info) => {
 					if (err) {
